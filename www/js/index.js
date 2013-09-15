@@ -224,6 +224,24 @@ function ring(nfcEvent) { // On NFC Activity..
 	  alert("redirecting to sweet spot page");
 	  window.location = "sweetSpot.html?action=website&option=sweetSpot" // We use this to execute the Sweet Spot test runner.
 	}
+	if(ringData.indexOf("testUID.nfcring.com") !== -1){
+	
+      var id = nfcEvent.tag.id; // Array of ID..
+	  var idString = id.toString(); // String of ID
+	
+	  // Init Parse and send object up, this is pretty nasty but to get things moving it will do.
+      Parse.initialize("WXYBVILETTwCgKXafjUleuFVdBdiONRn9IsMhWSL", "mtNxn404y2bK1tdGkhGsVjRRG7cau1hkZ1d0hsKs");
+      var TestObject = Parse.Object.extend("TestObject");
+      var testObject = new TestObject();
+      testObject.save({uid: idString}, {
+	    success: function(object){
+		  navigator.notification.vibrate(100);
+		  navigator.notification.beep(3);
+		  console.log("Success storing data back to parse");
+		  alert("Passed QA");
+		}
+      });
+	}
 	else if(ringData.indexOf("firstWrite.nfcring.com") !== -1){
 	  window.location = "firstWrite.html?action=website&option=firstWrite" // We use this to bring up the Testign confirmation screen
 	}
