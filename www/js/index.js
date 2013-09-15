@@ -226,8 +226,8 @@ function ring(nfcEvent) { // On NFC Activity..
 	}
 	
 	if(ringData.indexOf("testUID.nfcring.com") !== -1){ // If this is a QA Test procedure
-	  alert("Testing ring"); // temp
-	  
+      console.log("Attempting testUID save");
+
       var id = nfcEvent.tag.id; // Array of ID..
 	  var idString = id.toString(); // String of ID
 	
@@ -235,6 +235,7 @@ function ring(nfcEvent) { // On NFC Activity..
       Parse.initialize("WXYBVILETTwCgKXafjUleuFVdBdiONRn9IsMhWSL", "mtNxn404y2bK1tdGkhGsVjRRG7cau1hkZ1d0hsKs");
       var TestObject = Parse.Object.extend("TestObject");
       var testObject = new TestObject();
+
       testObject.save({uid: idString}, {
 	    success: function(object){
 		  navigator.notification.vibrate(100);
