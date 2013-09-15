@@ -224,8 +224,10 @@ function ring(nfcEvent) { // On NFC Activity..
 	  alert("redirecting to sweet spot page");
 	  window.location = "sweetSpot.html?action=website&option=sweetSpot" // We use this to execute the Sweet Spot test runner.
 	}
-	if(ringData.indexOf("testUID.nfcring.com") !== -1){
 	
+	if(ringData.indexOf("testUID.nfcring.com") !== -1){ // If this is a QA Test procedure
+	  alert("Testing ring"); // temp
+	  
       var id = nfcEvent.tag.id; // Array of ID..
 	  var idString = id.toString(); // String of ID
 	
