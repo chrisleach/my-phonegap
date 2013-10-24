@@ -105,7 +105,7 @@ function addActions() {
     if (!action.image) {
       action.image = key.toLowerCase() + ".png";
     };
-    $(".action > .actionContents > .ringActions").append("<a onClick='alert(\"zomg\");return false;' data-action=" + key + " class=\"ringAction paddedIcon\"><img src=\"img/" + action.image + "\">" + action.label + "</a>");
+    $(".action > .actionContents > .ringActions").append("<a href=\"addParameterToAction.html?action="+key+"\" data-action=" + key + " class=\"ringAction paddedIcon\"><img src=\"img/" + action.image + "\">" + action.label + "</a>");
   });
 }
 
