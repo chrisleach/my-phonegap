@@ -113,8 +113,10 @@ function selectAction(action) {
   debug("Action " + action + " selected");
   debug(actions[action]);
   if (actions[action].requiresString !== false) { // If the item requires further input
+  alert("foo", action)
     window.location = "addParameterToAction.html?action="+action;
   } else {
+  	alert("raa");
     window.location = "writeAction.html?action="+action;
   }
 }
