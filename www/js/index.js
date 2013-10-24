@@ -144,6 +144,7 @@ $("body").on('click', "#read", function () {
   window.location = "readAction.html";
 });
 $("body").on('click', ".action > .actionContents > .ringActions > .ringAction", function () {
+	alert("AAHHHFSDHFS");
   action = $(this).data("action");
   window.location = "addParameterToAction.html?action="+action;
 });
