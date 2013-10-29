@@ -107,6 +107,8 @@ function addActions() {
     };
     $(".action > .actionContents > .ringActions").append("<a href=\"addParameterToAction.html?action="+key+"\" data-action=" + key + " class=\"ringAction paddedIcon\"><img src=\"img/" + action.image + "\">" + action.label + "</a>");
   });
+  $(".action > .actionContents > .ringActions").append("<a href='addParameterToAction.html'>FOO</a> --- ");
+  $(".action > .actionContents > .ringActions").append("<a href='/addParameterToAction.html'>RAA</a>");
 }
 
 function selectAction(action) {
