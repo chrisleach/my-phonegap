@@ -74,6 +74,12 @@ var app = {
     // note that this is an event handler so the scope is that of the event
     // so we need to call app.report(), and not this.report()
     console.log('deviceready');
+    // Windows Phone 8 has mostly broken features..  Until they are fixed we hide read and barcode scan.
+    if (!barcodescanner){
+      $('#scan').hide();
+      $('#read').hide();
+    }
+
     if (nfc) {
 
       // window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, clearFS, fail); // Clearing is broken..
