@@ -75,7 +75,7 @@ var app = {
     // so we need to call app.report(), and not this.report()
     console.log('deviceready');
     // Windows Phone 8 has mostly broken features..  Until they are fixed we hide read and barcode scan.
-    if (!barcodescanner){
+    if (device.platform == "WinCE"){
       $('#scan').hide();
       $('#read').hide();
     }
