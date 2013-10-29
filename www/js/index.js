@@ -105,14 +105,12 @@ function addActions() {
     if (!action.image) {
       action.image = key.toLowerCase() + ".png";
     };
-    if (actions[action].requiresString !== false) { // If the item requires further input
+    if (actions[key].requiresString !== false) { // If the item requires further input
       $(".action > .actionContents > .ringActions").append("<a href=\"addParameterToAction.html?action=" + key + "\" data-action=" + key + " class=\"ringAction paddedIcon\"><img src=\"img/" + action.image + "\">" + action.label + "</a>");
     } else {
       $(".action > .actionContents > .ringActions").append("<a href=\"writeAction.html?action=" + key + "\" data-action=" + key + " class=\"ringAction paddedIcon\"><img src=\"img/" + action.image + "\">" + action.label + "</a>");
     }
   });
-  $(".action > .actionContents > .ringActions").append("<a href='addParameterToAction.html'>FOO</a> --- ");
-  $(".action > .actionContents > .ringActions").append("<a href='/addParameterToAction.html'>RAA</a>");
 }
 
 /*
