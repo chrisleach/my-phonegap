@@ -74,8 +74,8 @@ var app = {
     // note that this is an event handler so the scope is that of the event
     // so we need to call app.report(), and not this.report()
     console.log('deviceready');
-    if(nfc){
-	
+    if (nfc) {
+
       // window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, clearFS, fail); // Clearing is broken..
 
       nfc.addNdefListener(function (nfcEvent) {
@@ -85,7 +85,7 @@ var app = {
         console.log("Success.  Listening for rings..");
       }, function () {
         alert("NFC Functionality is not working, is NFC enabled on your device?");
-        $('#createNew, #read, #scan').attr('disabled','disabled');
+        $('#createNew, #read, #scan').attr('disabled', 'disabled');
         // console.log("Fail.");
       });
       // ndefRecord = ndef.uriRecord("http://nfcring.com"); // placeholder..
@@ -105,22 +105,14 @@ function addActions() {
     if (!action.image) {
       action.image = key.toLowerCase() + ".png";
     };
-    $(".action > .actionContents > .ringActions").append("<a href=\"addParameterToAction.html?action="+key+"\" data-action=" + key + " class=\"ringAction paddedIcon\"><img src=\"img/" + action.image + "\">" + action.label + "</a>");
+    if (actions[action].requiresString !== false) { // If the item requires further input
+      $(".action > .actionContents > .ringActions").append("<a href=\"addParameterToAction.html?action=" + key + "\" data-action=" + key + " class=\"ringAction paddedIcon\"><img src=\"img/" + action.image + "\">" + action.label + "</a>");
+    } else {
+      $(".action > .actionContents > .ringActions").append("<a href=\"writeAction.html?action=" + key + "\" data-action=" + key + " class=\"ringAction paddedIcon\"><img src=\"img/" + action.image + "\">" + action.label + "</a>");
+    }
   });
   $(".action > .actionContents > .ringActions").append("<a href='addParameterToAction.html'>FOO</a> --- ");
   $(".action > .actionContents > .ringActions").append("<a href='/addParameterToAction.html'>RAA</a>");
-}
-
-function selectAction(action) {
-  debug("Action " + action + " selected");
-  debug(actions[action]);
-  if (actions[action].requiresString !== false) { // If the item requires further input
-  alert("foo", action)
-    window.location = "addParameterToAction.html?action="+action;
-  } else {
-  	alert("raa");
-    window.location = "writeAction.html?action="+action;
-  }
 }
 
 /*
@@ -145,11 +137,6 @@ $("body").on('click', "#scan", function () {
 $("body").on('click', "#read", function () {
   window.location = "readAction.html";
 });
-$("body").on('click', ".action > .actionContents > .ringActions > .ringAction", function () {
-	alert("AAHHHFSDHFS");
-  action = $(this).data("action");
-  window.location = "addParameterToAction.html?action="+action;
-});
 $("body").on('click', "#finish", function () {
   console.log("um")
   debug("Restarting");
@@ -158,7 +145,7 @@ $("body").on('click', "#finish", function () {
 $("body").on('click', "#exit", function () {
   // close window / running application
   console.log("Exiting app");
-  navigator.app.exitApp(); 
+  navigator.app.exitApp();
 })
 
 // We have the tag in a global object
@@ -167,11 +154,11 @@ function ring(nfcEvent) { // On NFC Activity..
   var action = gup("action");
   var option = gup("option");
   option = unescape(option);
-  if(action == "website" && option == "sweetSpot"){ // are we measuring the sweet spot?
+  if (action == "website" && option == "sweetSpot") { // are we measuring the sweet spot?
     runCoOrds();
   }
-  if(action == "website" && option == "firstWrite"){ // are we doing a read/write from inside the factory?
-  
+  if (action == "website" && option == "firstWrite") { // are we doing a read/write from inside the factory?
+
     var ndefRecord = ndef.uriRecord("http://nfcring.com/getStarted"); // support more types.. TODO
     console.log("nfcEvent", nfcEvent);
     nfc.write([ndefRecord], function () {
@@ -179,32 +166,32 @@ function ring(nfcEvent) { // On NFC Activity..
       console.log("Written", ndefRecord);
       $("body").addClass("green");
       $("#actionName").text("UPLOADING");
-	  var id = nfcEvent.tag.id; // Array of ID..
-	  var idString = id.toString(); // String of ID
-	  var url = "http://firstWrite.nfcring.com"; // Where we are going to post this ID to
-      
-	  // Init Parse and send object up, this is pretty nasty but to get things moving it will do.
-	  Parse.initialize("LUZtDvWdXuhddcsvz4dXESb0dF1C7U0axfsKoYUS", "tNEebXMiaiFy4pJx3MXFejCGCVF8waQw9P91WJWH");
+      var id = nfcEvent.tag.id; // Array of ID..
+      var idString = id.toString(); // String of ID
+      var url = "http://firstWrite.nfcring.com"; // Where we are going to post this ID to
+
+      // Init Parse and send object up, this is pretty nasty but to get things moving it will do.
+      Parse.initialize("LUZtDvWdXuhddcsvz4dXESb0dF1C7U0axfsKoYUS", "tNEebXMiaiFy4pJx3MXFejCGCVF8waQw9P91WJWH");
       var TestObject = Parse.Object.extend("TestObject");
       var testObject = new TestObject();
-      testObject.save({uid: idString}, {
-	    success: function(object){
-		  navigator.notification.vibrate(100);
-		  navigator.notification.beep(3);
-		  console.log("Success storing data back to parse");
+      testObject.save({
+        uid: idString
+      }, {
+        success: function (object) {
+          navigator.notification.vibrate(100);
+          navigator.notification.beep(3);
+          console.log("Success storing data back to parse");
           $("body").removeClass("green");
-	      $("#actionName").text("HOLD RING TO SWEET SPOT");
-		}
+          $("#actionName").text("HOLD RING TO SWEET SPOT");
+        }
       });
-	  
+
     }, function (reason) {
       console.log("Inlay write failed")
     })
-     // window.location = "firstWrite.html?action=website&option=firstWrite" // We use this to bring up the Testign confirmation screen 
-  }
-  
-  else if (action != "") { // do we have an action to write or not?
-	// write
+    // window.location = "firstWrite.html?action=website&option=firstWrite" // We use this to bring up the Testign confirmation screen 
+  } else if (action != "") { // do we have an action to write or not?
+    // write
     // from https://github.com/don/phonegap-nfc-writer/blob/master/assets/www/main.js
     var newUrl = actions[action].format(option);
     console.log("New URL", newUrl)
@@ -217,74 +204,74 @@ function ring(nfcEvent) { // On NFC Activity..
     }, function (reason) {
       console.log("Inlay write failed")
     });
-	
-  }else{
+
+  } else {
     // read
-	console.log("Reading")
-	console.log(nfcEvent);
-	var ring = nfcEvent.tag;
-	console.log(ring);
-	ringData = nfc.bytesToString(ring.ndefMessage[0].payload); // TODO make this less fragile 
-	if(ringData.indexOf("sweetspot.nfcring.com") !== -1){
-	  alert("redirecting to sweet spot page");
-	  window.location = "sweetSpot.html?action=website&option=sweetSpot" // We use this to execute the Sweet Spot test runner.
-	}
-	
-	if(ringData.indexOf("testUID.nfcring.com") !== -1){ // If this is a QA Test procedure
+    console.log("Reading")
+    console.log(nfcEvent);
+    var ring = nfcEvent.tag;
+    console.log(ring);
+    ringData = nfc.bytesToString(ring.ndefMessage[0].payload); // TODO make this less fragile 
+    if (ringData.indexOf("sweetspot.nfcring.com") !== -1) {
+      alert("redirecting to sweet spot page");
+      window.location = "sweetSpot.html?action=website&option=sweetSpot" // We use this to execute the Sweet Spot test runner.
+    }
+
+    if (ringData.indexOf("testUID.nfcring.com") !== -1) { // If this is a QA Test procedure
       console.log("Attempting testUID save");
 
       var id = nfcEvent.tag.id; // Array of ID..
-	  var idString = id.toString(); // String of ID
-	
-	  // Init Parse and send object up, this is pretty nasty but to get things moving it will do.
+      var idString = id.toString(); // String of ID
+
+      // Init Parse and send object up, this is pretty nasty but to get things moving it will do.
       Parse.initialize("WXYBVILETTwCgKXafjUleuFVdBdiONRn9IsMhWSL", "mtNxn404y2bK1tdGkhGsVjRRG7cau1hkZ1d0hsKs");
       var TestObject = Parse.Object.extend("TestObject");
       var testObject = new TestObject();
 
-      testObject.save({uid: idString}, {
-	    success: function(object){
-		  navigator.notification.vibrate(100);
-		  navigator.notification.beep(3);
-		  console.log("Success storing data back to parse");
-		  alert("Passed QA");
-		}
+      testObject.save({
+        uid: idString
+      }, {
+        success: function (object) {
+          navigator.notification.vibrate(100);
+          navigator.notification.beep(3);
+          console.log("Success storing data back to parse");
+          alert("Passed QA");
+        }
       });
-	}
-	else if(ringData.indexOf("firstWrite.nfcring.com") !== -1){
-	  window.location = "firstWrite.html?action=website&option=firstWrite" // We use this to bring up the Testign confirmation screen
-	}
-	else{
-	  alert(ringData);
-	}
+    } else if (ringData.indexOf("firstWrite.nfcring.com") !== -1) {
+      window.location = "firstWrite.html?action=website&option=firstWrite" // We use this to bring up the Testign confirmation screen
+    } else {
+      alert(ringData);
+    }
   }
 }
 
-function runCoOrds(){
+function runCoOrds() {
   // Oh my, this is a test of the sweet spot..   Isn't this exciting!
   // Basically when we get a successful read we need to GET data from the arduino
- 
+
   $.ajax({
     url: "http://192.168.1.177",
-    success: function(coOrds){
-	  console.log(coOrds);
+    success: function (coOrds) {
+      console.log(coOrds);
       // coOrds = $.parseJSON(coOrds);
       data = {
         "coOrds": coOrds,
         "deviceUuid": device.uuid,
-	    "deviceModel": device.model
+        "deviceModel": device.model
       };
-	  x = coOrds.x / 10000; // Note this is prolly unhealthy
-	  y = coOrds.y / 10000; // Note this is prolly unhealthy
-	  console.log(x,y);
-	  totalCount++;
-      $('.actionContents').append("<li>Count:" + totalCount + ", X: " +x +" ,Y: "+y +"</li>");
-	
+      x = coOrds.x / 10000; // Note this is prolly unhealthy
+      y = coOrds.y / 10000; // Note this is prolly unhealthy
+      console.log(x, y);
+      totalCount++;
+      $('.actionContents').append("<li>Count:" + totalCount + ", X: " + x + " ,Y: " + y + "</li>");
+
       console.log("got ", data);
-	  
+
       window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
 
-	},
-  	error: function(xhr, ajaxOts, e){
+    },
+    error: function (xhr, ajaxOts, e) {
       console.log(xhr, ajaxOts, e);
     }
   });
@@ -292,41 +279,42 @@ function runCoOrds(){
 
 function scanQR() {
   var scanner = cordova.require("cordova/plugin/BarcodeScanner");
-  scanner.scan(function(resp) {
-	// qr code discovered, need to decode, set action and option
-	var bc = resp.text;
-	bc = JSON.parse(bc);
-	action = bc.action;
-	option = bc.option;
-	if (action == "website" && option == "sweetSpot"){
-	  alert("WIFI needs to be on and be able to access Arduino also make sure screen or device wont turn off during test");
-	  window.location = "sweetSpot.html?action=website&option=sweetSpot" // We use this to execute the Sweet Spot test runner.
-	}
-	else if (action && option){
-      window.location = "writeAction.html?action="+action+"&option="+option;
-	}else{
-	  window.location = "writeAction.html?action="+action;
-	}
-  }, function() { 
-	alert('uh oh error - please let us know!'); 
+  scanner.scan(function (resp) {
+    // qr code discovered, need to decode, set action and option
+    var bc = resp.text;
+    bc = JSON.parse(bc);
+    action = bc.action;
+    option = bc.option;
+    if (action == "website" && option == "sweetSpot") {
+      alert("WIFI needs to be on and be able to access Arduino also make sure screen or device wont turn off during test");
+      window.location = "sweetSpot.html?action=website&option=sweetSpot" // We use this to execute the Sweet Spot test runner.
+    } else if (action && option) {
+      window.location = "writeAction.html?action=" + action + "&option=" + option;
+    } else {
+      window.location = "writeAction.html?action=" + action;
+    }
+  }, function () {
+    alert('uh oh error - please let us know!');
   });
 }
 
-function gup( name ){
-  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");  
-  var regexS = "[\\?&]"+name+"=([^&#]*)";  
-  var regex = new RegExp( regexS );  
-  var results = regex.exec( window.location.href ); 
-  if( results == null ){
+function gup(name) {
+  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+  var regexS = "[\\?&]" + name + "=([^&#]*)";
+  var regex = new RegExp(regexS);
+  var results = regex.exec(window.location.href);
+  if (results == null) {
     return "";
-  }
-  else{
+  } else {
     return results[1];
   }
 }
 
 function gotFS(fileSystem) {
-  fileSystem.root.getFile("sweetSpot.txt", {create: true, exclusive: false}, gotFileEntry, fail);
+  fileSystem.root.getFile("sweetSpot.txt", {
+    create: true,
+    exclusive: false
+  }, gotFileEntry, fail);
 }
 
 function gotFileEntry(fileEntry) {
@@ -334,7 +322,7 @@ function gotFileEntry(fileEntry) {
 }
 
 function gotFileWriter(writer) {
-  writer.onwriteend = function(evt) {
+  writer.onwriteend = function (evt) {
     console.log("wrote x n y");
   };
   writer.seek(writer.length);
