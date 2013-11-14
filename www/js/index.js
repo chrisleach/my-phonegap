@@ -11,6 +11,8 @@ var app = {
     // note that this is an event handler so the scope is that of the event
     // so we need to call app.report(), and not this.report()
     console.log('deviceready');
+
+    // See http://docs.phonegap.com/en/edge/cordova_notification_notification.md.html#Notification
     alert = navigator.notification.alert;
     prompt = navigator.notification.prompt;
 

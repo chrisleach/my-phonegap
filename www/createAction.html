@@ -38,7 +38,6 @@
 app.initialize();
 
 nfcRing.addActions = function() {
-  // go through each item in actions and render to UI
   $.each(actions, function (key, action) {
     debug(action);
     if (!action.image) {
@@ -47,14 +46,18 @@ nfcRing.addActions = function() {
     $(".ringActions").append("<a data-key="+key+" class='ringAction paddedIcon'><img src='img/" + action.image + "'>" + action.label + "</a>");
   });
   
-  // Add event listeners
   $('.ringAction').click(function(){
     var key = $(this).data("key");
-    var response = prompt(actions[key].optionText, actions[key].placeHolder); 
-    if(response) $('#writeRing').show(); $('#action').hide();
+    prompt(actions[key].optionText, nfcRing.promptCallback, key, ["Ok", "Cancel"], actions[key].placeHolder); 
+  });
+}
+
+nfcRing.promptCallback = function(response){
+  if(response){
+    $('#writeRing').show(); $('#action').hide();
     console.log("Formatted as ", actions[key].format(response));
     nfcRing.toWrite = actions[key].format(response);
-  });
+  }
 }
 
 nfcRing.addActions();
