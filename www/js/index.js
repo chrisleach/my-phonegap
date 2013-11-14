@@ -12,6 +12,9 @@ var app = {
     // so we need to call app.report(), and not this.report()
     console.log('deviceready');
 
+    // See http://docs.phonegap.com/en/edge/cordova_events_events.md.html#backbutton
+    document.addEventListener("backbutton", nfcRing.handleBack, false);
+
     // See http://docs.phonegap.com/en/edge/cordova_notification_notification.md.html#Notification
     alert = navigator.notification.alert;
     prompt = navigator.notification.prompt;
@@ -64,37 +67,14 @@ nfcRing.read = function(nfcEvent){
   alert(ringData);
 }
 
-function runCoOrds() {
-  // Oh my, this is a test of the sweet spot..   Isn't this exciting!
-  // Basically when we get a successful read we need to GET data from the arduino
+nfcRing.handleBack = function() {
+  // If we're providing an input such as a twitter username and we hit back then go back to the actions prompt page
+  if(nfcRing.location == "option"){
+    console.log("reloading");
+    location.reload();
+  }
 
-  $.ajax({
-    url: "http://192.168.1.177",
-    success: function (coOrds) {
-      console.log(coOrds);
-      // coOrds = $.parseJSON(coOrds);
-      data = {
-        "coOrds": coOrds,
-        "deviceUuid": device.uuid,
-        "deviceModel": device.model
-      };
-      x = coOrds.x / 10000; // Note this is prolly unhealthy
-      y = coOrds.y / 10000; // Note this is prolly unhealthy
-      console.log(x, y);
-      totalCount++;
-      $('.actionContents').append("<li>Count:" + totalCount + ", X: " + x + " ,Y: " + y + "</li>");
-
-      console.log("got ", data);
-
-      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
-
-    },
-    error: function (xhr, ajaxOts, e) {
-      console.log(xhr, ajaxOts, e);
-    }
-  });
+  // When writing an NFC Ring if back button is pressed show the input page IE twitter username prompt
+  if(nfcRing.location == "writing") $('#option').show(); $('#writeRing').hide();
 }
 
-function fail(error) {
-  console.log(error.code);
-}

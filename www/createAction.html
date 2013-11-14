@@ -48,19 +48,6 @@
 <script type="text/javascript">
 app.initialize();
 
-document.addEventListener("backbutton", nfcRing.handleBack, false);
-
-nfcRing.handleBack = function() {
-  // If we're providing an input such as a twitter username and we hit back then go back to the actions prompt page
-  if(nfcRing.location == "option"){
-    console.log("reloading");
-    location.reload();
-  }
-
-  // When writing an NFC Ring if back button is pressed show the input page IE twitter username prompt
-  if(nfcRing.location == "writing") $('#option').show(); $('#writeRing').hide(); 
-}
-
 nfcRing.addActions = function() {
   $.each(actions, function (key, action) {
     debug(action);
