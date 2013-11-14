@@ -24,7 +24,6 @@ var app = {
         alert("NFC Functionality is not working, is NFC enabled on your device?");
         $('#createNew, #read, #scan').attr('disabled', 'disabled');
       });
-      // console.log('is barcode ready? ' + window.barcodescanner);
     }
   }
 };
@@ -34,6 +33,7 @@ function debug(msg) {
 }
 
 nfcRing.readOrWrite = function(nfcEvent){
+  console.log("Should I read or write?", nfcRing.toWrite);
   if(nfcRing.toWrite){
     nfcRing.write(nfcEvent);
     $('#writeRing').show();

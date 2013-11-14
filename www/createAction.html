@@ -44,16 +44,16 @@ nfcRing.addActions = function() {
     if (!action.image) {
       action.image = key.toLowerCase() + ".png";
     };
-    $(".ringActions").append("<a data-key="+key+" class=\"ringAction paddedIcon\"><img src=\"img/" + action.image + "\">" + action.label + "</a>");
+    $(".ringActions").append("<a data-key="+key+" class='ringAction paddedIcon'><img src='img/" + action.image + "'>" + action.label + "</a>");
   });
   
   // Add event listeners
   $('.ringAction').click(function(){
     var key = $(this).data("key");
     var response = prompt(actions[key].optionText, actions[key].placeHolder); 
-    // See http://docs.phonegap.com/en/edge/cordova_notification_notification.md.html#Notification
     if(response) $('#writeRing').show(); $('#action').hide();
-    nfcRing.toWrite = response;
+    console.log("Formatted as ", actions[key].format(response));
+    nfcRing.toWrite = actions[key].format(response);
   });
 }
 
