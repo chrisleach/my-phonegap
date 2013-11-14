@@ -61,18 +61,18 @@ nfcRing.addActions = function() {
     var key = $(this).data("key");
     $('#option').show(); $('#action').hide();
     $('#option > .actionName').text(actions[key].label);
-    $('#optionInput').val();
     $('#optionInput').attr("placeholder", actions[key].placeHolder);
     $('form > label').text(actions[key].optionText);
     $('#optionForm').submit(function(e){
       e.preventDefault();
-      nfcRing.submitted();
+      console.log("Submitting a write value to the nfcRing object");
+      nfcRing.submitted(key);
       return false;
     });
   });
 }
 
-nfcRing.submitted = function(){
+nfcRing.submitted = function(key){
   var response = $('#optionInput').val();
   if(response){
     $('#writeRing').show(); $('#option').hide();
