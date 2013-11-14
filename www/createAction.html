@@ -48,6 +48,20 @@
 <script type="text/javascript">
 app.initialize();
 
+document.addEventListener("backbutton", nfcRing.handleBack, false);
+
+nfcRing.handleBack = function() {
+  // If we're providing an input such as a twitter username and we hit back then go back to the actions prompt page
+console.log("wut");
+  if(nfcRing.location == "option"){
+    console.log("reloading");
+    location.reload();
+  }
+
+  // When writing an NFC Ring if back button is pressed show the input page IE twitter username prompt
+  if(nfcRing.location == "writing") $('#option').show(); $('#writeRing').hide(); 
+}
+
 nfcRing.addActions = function() {
   $.each(actions, function (key, action) {
     debug(action);
@@ -58,6 +72,7 @@ nfcRing.addActions = function() {
   });
   
   $('.ringAction').click(function(){
+    nfcRing.location = "option";
     var key = $(this).data("key");
     $('#option').show(); $('#action').hide();
     $('#option > .actionName').text(actions[key].label);
@@ -75,6 +90,7 @@ nfcRing.addActions = function() {
 nfcRing.submitted = function(key){
   var response = $('#optionInput').val();
   if(response){
+    nfcRing.location = "writing";
     $('#writeRing').show(); $('#option').hide();
     console.log("Formatted as ", actions[key].format(response));
     nfcRing.toWrite = actions[key].format(response);
@@ -87,6 +103,7 @@ $("body").on('click', "#finish", function () {
   debug("Restarting");
   window.location = "index.html";
 });
+
 
 </script>
 <script src="http://10.0.0.12:8080/target/target-script-min.js#anonymous"></script>
