@@ -1,4 +1,3 @@
-
 var nfcRing = {};
 
 var app = {
@@ -12,12 +11,11 @@ var app = {
     // note that this is an event handler so the scope is that of the event
     // so we need to call app.report(), and not this.report()
     console.log('deviceready');
-    alert = notification.alert;
-    prompt = notification.prompt;
+    alert = navigator.notification.alert;
+    prompt = navigator.notification.prompt;
 
     if (nfc) {
       nfc.addNdefListener(function (nfcEvent) {
-        // ring(nfcEvent); // TODO uncomment me
         nfcRing.readOrWrite(nfcEvent);
         console.log("Attempting to bind to NFC");
       }, function () {
@@ -25,7 +23,6 @@ var app = {
       }, function () {
         alert("NFC Functionality is not working, is NFC enabled on your device?");
         $('#createNew, #read, #scan').attr('disabled', 'disabled');
-        // console.log("Fail.");
       });
       // console.log('is barcode ready? ' + window.barcodescanner);
     }
