@@ -52,7 +52,6 @@ document.addEventListener("backbutton", nfcRing.handleBack, false);
 
 nfcRing.handleBack = function() {
   // If we're providing an input such as a twitter username and we hit back then go back to the actions prompt page
-console.log("wut");
   if(nfcRing.location == "option"){
     console.log("reloading");
     location.reload();
