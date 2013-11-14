@@ -18,22 +18,43 @@
 <script type="text/javascript">
 
 app = {
-		  initialize: function () {
-		    this.bind();
-		  },
-		  bind: function () {
-		    document.addEventListener('deviceready', this.deviceready, false);
-		  },
-		  deviceready: function () {
-		    // note that this is an event handler so the scope is that of the event
-		    // so we need to call app.report(), and not this.report()
-	 	    scanQR();
-		  }
-		};
+  initialize: function () {
+    this.bind();
+  },
+  bind: function () {
+    document.addEventListener('deviceready', this.deviceready, false);
+  },
+  deviceready: function () {
+    // note that this is an event handler so the scope is that of the event
+    // so we need to call app.report(), and not this.report()
+    scanQR();
+  }
+};
 		
 
-  app.initialize();
-  
+app.initialize();
+
+function scanQR() {
+  var scanner = cordova.require("cordova/plugin/BarcodeScanner");
+  scanner.scan(function (resp) {
+    // qr code discovered, need to decode, set action and option
+    var bc = resp.text;
+    bc = JSON.parse(bc);
+    action = bc.action;
+    option = bc.option;
+    if (action == "website" && option == "sweetSpot") {
+      alert("WIFI needs to be on and be able to access Arduino also make sure screen or device wont turn off during test");
+      window.location = "sweetSpot.html?action=website&option=sweetSpot" // We use this to execute the Sweet Spot test runner.
+    } else if (action && option) {
+      window.location = "writeAction.html?action=" + action + "&option=" + option;
+    } else {
+      window.location = "writeAction.html?action=" + action;
+    }
+  }, function () {
+    alert('uh oh error - please let us know!');
+  });
+}
+ 
 </script>
 
     </body>

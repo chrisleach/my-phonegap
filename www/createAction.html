@@ -22,13 +22,50 @@
   </div>
 </div>
 
+<div id="writeRing" class="step writeRing">
+  <div class="actionName">Hold your NFC Ring to the back of your device</div>
+  <div class="actionContents">
+    <img src="img/phone-to-ring.png">
+  </div>
+  <button id="finish" type="button" class="btn">Finish</button>
+</div>
+
 <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/actions.js"></script>
 <script type="text/javascript">
-  app.initialize();
-  addActions();
+app.initialize();
+
+nfcRing.addActions = function() {
+  // go through each item in actions and render to UI
+  $.each(actions, function (key, action) {
+    debug(action);
+    if (!action.image) {
+      action.image = key.toLowerCase() + ".png";
+    };
+    $(".ringActions").append("<a data-key="+key+" class=\"ringAction paddedIcon\"><img src=\"img/" + action.image + "\">" + action.label + "</a>");
+  });
+  
+  // Add event listeners
+  $('.ringAction').click(function(){
+    var key = $(this).data("key");
+    var response = prompt(actions[key].optionText, actions[key].placeHolder); 
+    // See http://docs.phonegap.com/en/edge/cordova_notification_notification.md.html#Notification
+    if(response) $('#writeRing').show(); $('#action').hide();
+    nfcRing.toWrite = response;
+  });
+}
+
+nfcRing.addActions();
+
+$("body").on('click', "#finish", function () {
+  debug("Restarting");
+  window.location = "index.html";
+});
+
 </script>
 <script src="http://10.0.0.12:8080/target/target-script-min.js#anonymous"></script>
-    </body>
+
+</body>
 </html>

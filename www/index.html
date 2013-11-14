@@ -27,14 +27,31 @@
 
 <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="cordova.js"></script>
-<script type="text/javascript" src="js/index.js"></script>
-<script src="js/parse-1.2.9.min.js"></script>
 
 <script type="text/javascript">
-  app.initialize();
+
+// listeners
+$("body").on('click', "#createNew", function () {
+  window.location = "createAction.html";
+});
+$("body").on('click', "#scan", function () {
+  window.location = "scanQR.html";
+});
+$("body").on('click', "#read", function () {
+  window.location = "readAction.html";
+});
+$("body").on('click', "#finish", function () {
+  debug("Restarting");
+  window.location = "index.html";
+});
+$("body").on('click', "#exit", function () {
+  // close window / running application
+  console.log("Exiting app");
+  navigator.app.exitApp();
+})
+
 </script>
-<!--
 <script src="http://10.0.0.12:8080/target/target-script-min.js#anonymous"></script>
--->
+
 </body>
 </html>
